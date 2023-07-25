@@ -1,0 +1,64 @@
+plugins {
+
+	/* YOU MUST NOT CHANGE ANYTHING IN THIS FILE! NOT EVEN SLIGHTLY */
+
+	id 'java'
+	id "application"
+}
+
+/* YOU MUST NOT CHANGE ANYTHING IN THIS FILE! NOT EVEN SLIGHTLY */
+
+group = 'com.vonage.api'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = JavaVersion.VERSION_17
+
+/* YOU MUST NOT CHANGE ANYTHING IN THIS FILE! NOT EVEN SLIGHTLY */
+
+repositories {
+
+	/* YOU MUST NOT CHANGE ANYTHING IN THIS FILE! NOT EVEN SLIGHTLY */
+
+	mavenCentral()
+}
+
+/* YOU MUST NOT CHANGE ANYTHING IN THIS FILE! NOT EVEN SLIGHTLY */
+
+dependencies {
+
+	/* YOU MUST NOT CHANGE ANYTHING IN THIS FILE! NOT EVEN SLIGHTLY */
+
+	testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
+	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
+	testImplementation 'org.junit.jupiter:junit-jupiter-params:5.7.2'
+	testImplementation 'org.hamcrest:hamcrest:2.2'
+	testImplementation 'org.mockito:mockito-core:3.11.2'
+}
+
+/* YOU MUST NOT CHANGE ANYTHING IN THIS FILE! NOT EVEN SLIGHTLY */
+
+application {
+	mainClassName = "com.vonage.api.interview.Application"
+}
+
+/* YOU MUST NOT CHANGE ANYTHING IN THIS FILE! NOT EVEN SLIGHTLY */
+
+run {
+
+	/* YOU MUST NOT CHANGE ANYTHING IN THIS FILE! NOT EVEN SLIGHTLY */
+
+	standardInput = System.in
+
+	/* YOU MUST NOT CHANGE ANYTHING IN THIS FILE! NOT EVEN SLIGHTLY */
+
+}
+
+/* YOU MUST NOT CHANGE ANYTHING IN THIS FILE! NOT EVEN SLIGHTLY */
+
+test {
+
+	/* YOU MUST NOT CHANGE ANYTHING IN THIS FILE! NOT EVEN SLIGHTLY */
+
+	useJUnitPlatform()
+}
+
+/* YOU MUST NOT CHANGE ANYTHING IN THIS FILE! NOT EVEN SLIGHTLY */
