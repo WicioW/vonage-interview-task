@@ -14,7 +14,6 @@ public class ScoreHelper {
     }
 
     public int getScore() {
-//        return wordOccurrenceCount / allWordsCount;\
         return (int) ((double) wordOccurrenceCount / allWordsCount * 100);
     }
 }
