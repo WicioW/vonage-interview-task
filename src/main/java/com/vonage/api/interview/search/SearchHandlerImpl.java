@@ -1,9 +1,8 @@
 package com.vonage.api.interview.search;
 
 import com.vonage.api.interview.CommandHandlers;
+import com.vonage.api.interview.WordsExtractor;
 import com.vonage.api.interview.scoring.FileScores;
-import com.vonage.api.interview.test.InvertedIndexPerIndexName;
-import com.vonage.api.interview.test.ScoreHelper;
 import com.vonage.api.interview.util.StringValidator;
 
 import java.io.PrintStream;
@@ -11,33 +10,37 @@ import java.nio.file.Path;
 import java.util.*;
 
 
-public class SearchHandlerImpl implements CommandHandlers.SearchHandler{
+public class SearchHandlerImpl implements CommandHandlers.SearchHandler {
 
     private final PrintStream err;
     private final StringValidator stringValidator;
-
+    private final WordsExtractor wordsExtractor;
     private final Map<String, InvertedIndexPerIndexName> invertedIndexPerIndexNameMap;
+
+    private final FileScores empty = new FileScores(new HashMap<>());
 
     public SearchHandlerImpl(
             PrintStream err,
             StringValidator stringValidator,
-            Map<String, InvertedIndexPerIndexName> invertedIndexPerIndexNameMap) {
+            WordsExtractor wordsExtractor, Map<String, InvertedIndexPerIndexName> invertedIndexPerIndexNameMap) {
         this.err = err;
         this.stringValidator = stringValidator;
+        this.wordsExtractor = wordsExtractor;
         this.invertedIndexPerIndexNameMap = invertedIndexPerIndexNameMap;
     }
 
     @Override
     public FileScores search(String indexName, String searchString) {
-        if (stringValidator.isEmpty(indexName, "IndexName")) return null;
-        if (stringValidator.isEmpty(searchString, "SearchString")) return null;
+        if (stringValidator.isEmpty(indexName, "IndexName")) return empty;
+        if (stringValidator.isEmpty(searchString, "SearchString")) return empty;
 
         InvertedIndexPerIndexName invertedIndexPerIndexName = invertedIndexPerIndexNameMap.get(indexName);
-        if(invertedIndexPerIndexName == null) {
+        if (invertedIndexPerIndexName == null) {
             err.println("Index with name " + indexName + " does not exist.");
-            return new FileScores(new HashMap<>());
+            return empty;
         }
-        String[] searchWords = searchString.split("\\s+");
+
+        String[] searchWords = wordsExtractor.extract(searchString);
 
         //create empty score map, every file should have score 0
         Set<Path> allFiles = invertedIndexPerIndexName.getAllFiles();

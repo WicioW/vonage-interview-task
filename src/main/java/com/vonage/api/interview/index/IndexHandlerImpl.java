@@ -1,7 +1,8 @@
 package com.vonage.api.interview.index;
 
 import com.vonage.api.interview.CommandHandlers;
-import com.vonage.api.interview.test.InvertedIndexPerIndexName;
+import com.vonage.api.interview.WordsExtractor;
+import com.vonage.api.interview.search.InvertedIndexPerIndexName;
 import com.vonage.api.interview.util.StringValidator;
 
 import java.io.BufferedReader;
@@ -18,6 +19,7 @@ public class IndexHandlerImpl implements CommandHandlers.IndexHandler {
     private final PrintStream err;
     private final PrintStream out;
     private final StringValidator stringValidator;
+    private final WordsExtractor wordsExtractor;
 
     private final Map<String, InvertedIndexPerIndexName> invertedIndexPerIndexNameMap;
 
@@ -25,10 +27,11 @@ public class IndexHandlerImpl implements CommandHandlers.IndexHandler {
             PrintStream err,
             PrintStream out,
             StringValidator stringValidator,
-            Map<String, InvertedIndexPerIndexName> invertedIndexPerIndexNameMap) {
+            WordsExtractor wordsExtractor, Map<String, InvertedIndexPerIndexName> invertedIndexPerIndexNameMap) {
         this.err = err;
         this.out = out;
         this.stringValidator = stringValidator;
+        this.wordsExtractor = wordsExtractor;
         this.invertedIndexPerIndexNameMap = invertedIndexPerIndexNameMap;
     }
 
@@ -60,9 +63,8 @@ public class IndexHandlerImpl implements CommandHandlers.IndexHandler {
         try (BufferedReader br = new BufferedReader(new FileReader(file.toFile()))) {
             String line;
             while ((line = br.readLine()) != null) {
-                String[] words = line.split("\\s+");
+                String[] words = wordsExtractor.extract(line);
                 for (String word : words) {
-                    invertedIndexPerIndexName.addFile(file);
                     invertedIndexPerIndexName.addWord(word, file);
                 }
             }

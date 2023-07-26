@@ -1,6 +1,7 @@
 package com.vonage.api.interview.index;
 
-import com.vonage.api.interview.test.InvertedIndexPerIndexName;
+import com.vonage.api.interview.WordsExtractor;
+import com.vonage.api.interview.search.InvertedIndexPerIndexName;
 import com.vonage.api.interview.util.StringValidator;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.io.TempDir;
@@ -27,10 +28,15 @@ class IndexHandlerImplTest {
         private final PrintStream err = mock(PrintStream.class);
         private final PrintStream out = mock(PrintStream.class);
         private final StringValidator stringValidator = mock(StringValidator.class);
-
+        private final WordsExtractor wordsExtractor = mock(WordsExtractor.class);
         private final Map<String, InvertedIndexPerIndexName> invertedIndexPerIndexNameMap = mock(Map.class);
 
-        private final IndexHandlerImpl testObj = new IndexHandlerImpl(err, out, stringValidator, invertedIndexPerIndexNameMap);
+        private final IndexHandlerImpl testObj = new IndexHandlerImpl(
+                err,
+                out,
+                stringValidator,
+                wordsExtractor,
+                invertedIndexPerIndexNameMap);
 
         @BeforeEach
         public void setup() {
@@ -54,6 +60,8 @@ class IndexHandlerImplTest {
             String indexName = "Qy1zx";
             createFile(tmpDir, "file1", "hello meep");
             createFile(tmpDir, "file2", "hello moop");
+            when(wordsExtractor.extract("hello meep")).thenReturn(new String[]{"hello", "meep"});
+            when(wordsExtractor.extract("hello moop")).thenReturn(new String[]{"hello", "moop"});
             InvertedIndexPerIndexName invertedIndexPerIndexName = new InvertedIndexPerIndexName();
             when(invertedIndexPerIndexNameMap.get(indexName)).thenReturn(invertedIndexPerIndexName);
 
@@ -79,12 +87,14 @@ class IndexHandlerImplTest {
         private final ByteArrayOutputStream errBuffer = new ByteArrayOutputStream();
         private final PrintStream err = new PrintStream(errBuffer, true);
 
+        private final WordsExtractor wordsExtractor = mock(WordsExtractor.class);
         private final Map<String, InvertedIndexPerIndexName> invertedIndexPerIndexNameMap = mock(Map.class);
 
         private final IndexHandlerImpl testObj = new IndexHandlerImpl(
                 err,
                 out,
                 new StringValidator(err),
+                wordsExtractor,
                 invertedIndexPerIndexNameMap);
 
         @AfterEach

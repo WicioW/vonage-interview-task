@@ -2,7 +2,7 @@ package com.vonage.api.interview;
 
 import com.vonage.api.interview.index.IndexHandlerImpl;
 import com.vonage.api.interview.search.SearchHandlerImpl;
-import com.vonage.api.interview.test.InvertedIndexPerIndexName;
+import com.vonage.api.interview.search.InvertedIndexPerIndexName;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
