@@ -15,7 +15,6 @@ public class SearchHandlerImpl implements CommandHandlers.SearchHandler{
 
     private final PrintStream err;
     private final StringValidator stringValidator;
-//    private final PrintStream out = System.out;
 
     private final Map<String, InvertedIndexPerIndexName> invertedIndexPerIndexNameMap;
 
@@ -65,38 +64,6 @@ public class SearchHandlerImpl implements CommandHandlers.SearchHandler{
                     entry.getValue().getScore()
             );
         }
-
-//        Path directory = indexDirectoryMap.get(indexName);
-//        if (directory == null) {
-//            System.err.println("Index with name " + indexName + " does not exist.");
-//            return new FileScores(new HashMap<>());
-//        }
-//
-//        String[] searchWords = searchString.split("\\s+");
-//        int searchStringWordCount = searchWords.length;
-//
-//
-////        try {
-////            Files.walk(directory)
-////                    .filter(Files::isRegularFile)
-////                    .forEach(file -> {
-////                        int score = calculateScore(file, searchString);
-////                        orderedFileScores.put(file.toString(), score);
-////                    });
-////        } catch (Exception e) {
-////            System.err.println("Error searching the index: " + e.getMessage());
-////        }
-//
-//
-//
-//                TreeMap<String, Integer> orderedFileScores = new TreeMap<>(Collections.reverseOrder());
-//        for (String searchWord : searchWords) {
-//            Set<String> filesWithWord = invertedIndex.getOrDefault(searchWord, new HashSet<>());
-//            for (String file : filesWithWord) {
-//                int score = calculateScore(file, searchWords);
-//                orderedFileScores.put(file, score);
-//            }
-//        }
 
         return new FileScores(orderedFileScores);
     }

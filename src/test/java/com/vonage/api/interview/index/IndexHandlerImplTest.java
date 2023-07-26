@@ -94,7 +94,7 @@ class IndexHandlerImplTest {
         }
 
         @Test
-        void whenIndexingIsFinished_shouldPrintHelpfulText(@TempDir File tmpDir) {
+        void whenIndexingIsFinished_shouldPrintInfoText(@TempDir File tmpDir) {
             //given
             String indexName = "Qy1zx";
             InvertedIndexPerIndexName invertedIndexPerIndexName = new InvertedIndexPerIndexName();

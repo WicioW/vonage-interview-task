@@ -13,7 +13,7 @@ class StringValidatorTest {
     private final ByteArrayOutputStream errBuffer = new ByteArrayOutputStream();
     private final PrintStream err = new PrintStream(errBuffer, true);
 
-    private final StringValidator stringValidator = new StringValidator(err);
+    private final StringValidator testObj = new StringValidator(err);
 
     private static final String ERROR_MESSAGE = "Error: %s cannot be empty." + System.lineSeparator();
 
@@ -24,14 +24,17 @@ class StringValidatorTest {
 
     @Test
     void testValidateIsNotEmpty() {
-        assertFalse(stringValidator.isEmpty("test", "test"));
-        assertTrue(stringValidator.isEmpty("", "test"));
-        assertTrue(stringValidator.isEmpty(null, "test"));
+        //when-then
+        assertFalse(testObj.isEmpty("test", "test"));
+        assertTrue(testObj.isEmpty("", "test"));
+        assertTrue(testObj.isEmpty(null, "test"));
     }
 
     @Test
     void testValidateIsNotEmptyErrorMessage() {
-        stringValidator.isEmpty("", "b195yqR");
+        //given-when
+        testObj.isEmpty("", "b195yqR");
+        //then
         assertEquals(ERROR_MESSAGE.formatted("b195yqR"), errBuffer.toString());
     }
 
