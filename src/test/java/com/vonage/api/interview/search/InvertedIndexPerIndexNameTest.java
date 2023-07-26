@@ -1,4 +1,4 @@
-package com.vonage.api.interview.test;
+package com.vonage.api.interview.search;
 
 import com.vonage.api.interview.search.InvertedIndexPerIndexName;
 import org.junit.jupiter.api.Test;
