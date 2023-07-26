@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
+import java.util.stream.Stream;
 
 public class IndexHandlerImpl implements CommandHandlers.IndexHandler {
 
@@ -18,7 +19,6 @@ public class IndexHandlerImpl implements CommandHandlers.IndexHandler {
     private final PrintStream out;
     private final StringValidator stringValidator;
 
-    //    private final Map<String, Path> indexDirectoryMap;
     private final Map<String, InvertedIndexPerIndexName> invertedIndexPerIndexNameMap;
 
     public IndexHandlerImpl(
@@ -34,27 +34,24 @@ public class IndexHandlerImpl implements CommandHandlers.IndexHandler {
 
     @Override
     public void index(String indexName, String directory) {
-        if (!stringValidator.validateIsNotEmpty(indexName, "IndexName")) return;
-        if (!stringValidator.validateIsNotEmpty(directory, "Directory")) return;
+        if (stringValidator.isEmpty(indexName, "IndexName")) return;
+        if (stringValidator.isEmpty(directory, "Directory")) return;
 
         Path path = Paths.get(directory);
         if (!isPathADirectory(path)) return;
 
-//        indexDirectoryMap.put(indexName, path);
         invertedIndexPerIndexNameMap.put(indexName, new InvertedIndexPerIndexName());
-
-
         preprocessFiles(path, indexName);
+
         out.println("Indexed " + path + " with name " + indexName);
     }
 
     private void preprocessFiles(Path directory, String indexName) {
-        try {
-            Files.walk(directory)
-                    .filter(Files::isRegularFile)
+        try (Stream<Path> files = Files.walk(directory)) {
+            files.filter(Files::isRegularFile)
                     .forEach(f -> preprocessFile(f, indexName));
         } catch (Exception e) {
-            System.err.println("Error preprocessing files: " + e.getMessage());
+            err.println("Error preprocessing files: " + e.getMessage());
         }
     }
 
@@ -70,7 +67,7 @@ public class IndexHandlerImpl implements CommandHandlers.IndexHandler {
                 }
             }
         } catch (Exception e) {
-            System.err.println("Error preprocessing file: " + e.getMessage());
+            err.println("Error preprocessing file: " + e.getMessage());
         }
     }
 
@@ -82,19 +79,4 @@ public class IndexHandlerImpl implements CommandHandlers.IndexHandler {
         return true;
     }
 
-//    private boolean validateDirectoryParameter(String directory) {
-//        return validateStringParameter(directory, "Directory");
-//    }
-//
-//    private boolean validateIndexNameParameter(String indexName) {
-//        return validateStringParameter(indexName, "Index name");
-//    }
-//
-//    private boolean validateStringParameter(String string, String valueName) {
-//        if (string.isEmpty()) {
-//            err.println("Error: " + valueName + " cannot be empty.");
-//            return false;
-//        }
-//        return true;
-//    }
 }

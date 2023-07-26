@@ -30,8 +30,8 @@ public class SearchHandlerImpl implements CommandHandlers.SearchHandler{
 
     @Override
     public FileScores search(String indexName, String searchString) {
-        if (!stringValidator.validateIsNotEmpty(indexName, "IndexName")) return null;
-        if (!stringValidator.validateIsNotEmpty(searchString, "SearchString")) return null;
+        if (stringValidator.isEmpty(indexName, "IndexName")) return null;
+        if (stringValidator.isEmpty(searchString, "SearchString")) return null;
 
         InvertedIndexPerIndexName invertedIndexPerIndexName = invertedIndexPerIndexNameMap.get(indexName);
         if(invertedIndexPerIndexName == null) {

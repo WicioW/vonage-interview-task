@@ -10,11 +10,11 @@ public class StringValidator {
         this.err = err;
     }
 
-    public boolean validateIsNotEmpty(String string, String valueName) {
+    public boolean isEmpty(String string, String valueName) {
         if (string == null || string.isEmpty()) {
             err.println("Error: " + valueName + " cannot be empty.");
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 }

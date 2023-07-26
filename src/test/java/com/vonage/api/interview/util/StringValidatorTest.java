@@ -1,5 +1,6 @@
 package com.vonage.api.interview.util;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -16,16 +17,21 @@ class StringValidatorTest {
 
     private static final String ERROR_MESSAGE = "Error: %s cannot be empty." + System.lineSeparator();
 
+    @AfterEach
+    public void close() {
+        err.close();
+    }
+
     @Test
     void testValidateIsNotEmpty() {
-        assertTrue(stringValidator.validateIsNotEmpty("test", "test"));
-        assertFalse(stringValidator.validateIsNotEmpty("", "test"));
-        assertFalse(stringValidator.validateIsNotEmpty(null, "test"));
+        assertFalse(stringValidator.isEmpty("test", "test"));
+        assertTrue(stringValidator.isEmpty("", "test"));
+        assertTrue(stringValidator.isEmpty(null, "test"));
     }
 
     @Test
     void testValidateIsNotEmptyErrorMessage() {
-        stringValidator.validateIsNotEmpty("", "b195yqR");
+        stringValidator.isEmpty("", "b195yqR");
         assertEquals(ERROR_MESSAGE.formatted("b195yqR"), errBuffer.toString());
     }
 
