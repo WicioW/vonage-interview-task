@@ -1,4 +1,4 @@
-package com.vonage.api.interview.test;
+package com.vonage.api.interview.search;
 
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -11,11 +11,8 @@ public class InvertedIndexPerIndexName {
     private final Set<Path> allFiles = new HashSet<>();
     private final Map<String, Set<Path>> invertedIndex = new HashMap<>();
 
-    public void addFile(Path file) {
-        allFiles.add(file);
-    }
-
     public void addWord(String word, Path file) {
+        allFiles.add(file);
         invertedIndex.computeIfAbsent(word, k -> new HashSet<>()).add(file);
     }
 
