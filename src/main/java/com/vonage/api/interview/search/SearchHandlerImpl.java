@@ -16,7 +16,7 @@ public class SearchHandlerImpl implements CommandHandlers.SearchHandler {
     private final WordsExtractor wordsExtractor;
     private final Map<String, InvertedIndexPerIndexName> invertedIndexPerIndexNameMap;
 
-    private final FileScores empty = new FileScores(new HashMap<>());
+    private final FileScores emptyFileScores = new FileScores(new HashMap<>());
 
     public SearchHandlerImpl(
             PrintStream err,
@@ -30,22 +30,23 @@ public class SearchHandlerImpl implements CommandHandlers.SearchHandler {
 
     @Override
     public FileScores search(String indexName, String searchString) {
-        if (stringValidator.isEmpty(indexName, "IndexName")) return empty;
-        if (stringValidator.isEmpty(searchString, "SearchString")) return empty;
+        if (stringValidator.isEmpty(indexName, "IndexName") || stringValidator.isEmpty(searchString, "SearchString")) {
+            return emptyFileScores;
+        }
 
         InvertedIndexPerIndexName invertedIndexPerIndexName = invertedIndexPerIndexNameMap.get(indexName);
         if (invertedIndexPerIndexName == null) {
             err.println("Index with name " + indexName + " does not exist.");
-            return empty;
+            return emptyFileScores;
         }
 
         String[] searchWords = wordsExtractor.extract(searchString);
 
-        Map<Path, ScoreHelper> scoreHelperMap = createScoreHelperMapForEveryFile(
+        Map<Path, ScoreHelper> scoreHelperMap = initializeScoreHelperMap(
                 invertedIndexPerIndexName.getAllFiles(),
                 searchWords.length);
 
-        updateScoreHelperMapForEveryFoundWord(
+        updateScoreHelperMapBySearchWords(
                 searchWords,
                 scoreHelperMap,
                 invertedIndexPerIndexName.getInvertedIndex()
@@ -55,7 +56,7 @@ public class SearchHandlerImpl implements CommandHandlers.SearchHandler {
         return new FileScores(orderedFileScores);
     }
 
-    private Map<Path, ScoreHelper> createScoreHelperMapForEveryFile(Set<Path> allFiles, int searchWordsCount) {
+    private Map<Path, ScoreHelper> initializeScoreHelperMap(Set<Path> allFiles, int searchWordsCount) {
         Map<Path, ScoreHelper> scoreHelperMap = new HashMap<>(allFiles.size());
 
         allFiles.forEach(file ->
@@ -63,12 +64,12 @@ public class SearchHandlerImpl implements CommandHandlers.SearchHandler {
         return scoreHelperMap;
     }
 
-    private void updateScoreHelperMapForEveryFoundWord(String[] searchWords, Map<Path, ScoreHelper> scoreHelperMap, Map<String, Set<Path>> invertedIndex) {
-        Arrays.asList(searchWords)
-                .forEach(searchWord ->
-                        updateEachFileInScoreHelperMapByWord(
-                                scoreHelperMap,
-                                invertedIndex.getOrDefault(searchWord, new HashSet<>())));
+    private void updateScoreHelperMapBySearchWords(String[] searchWords, Map<Path, ScoreHelper> scoreHelperMap, Map<String, Set<Path>> invertedIndex) {
+        for (String searchWord : searchWords) {
+            updateEachFileInScoreHelperMapByWord(
+                    scoreHelperMap,
+                    invertedIndex.getOrDefault(searchWord, new HashSet<>()));
+        }
     }
 
     private void updateEachFileInScoreHelperMapByWord(Map<Path, ScoreHelper> scoreHelperMap, Set<Path> filesWithWord) {
