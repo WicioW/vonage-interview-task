@@ -1,10 +1,7 @@
 package com.vonage.api.interview.search;
 
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class InvertedIndexPerIndexName {
 
@@ -19,10 +16,10 @@ public class InvertedIndexPerIndexName {
     }
 
     public Set<Path> getAllFiles() {
-        return allFiles;
+        return Collections.unmodifiableSet(allFiles);
     }
 
     public Map<String, Set<Path>> getInvertedIndex() {
-        return invertedIndex;
+        return Collections.unmodifiableMap(invertedIndex);
     }
 }
