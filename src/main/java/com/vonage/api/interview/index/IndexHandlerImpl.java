@@ -20,14 +20,17 @@ public class IndexHandlerImpl implements CommandHandlers.IndexHandler {
     private final PrintStream out;
     private final StringValidator stringValidator;
     private final WordsExtractor wordsExtractor;
-
     private final Map<String, InvertedIndexPerIndexName> invertedIndexPerIndexNameMap;
 
     public IndexHandlerImpl(
             PrintStream err,
             PrintStream out,
             StringValidator stringValidator,
-            WordsExtractor wordsExtractor, Map<String, InvertedIndexPerIndexName> invertedIndexPerIndexNameMap) {
+            WordsExtractor wordsExtractor,
+            Map<String, InvertedIndexPerIndexName> invertedIndexPerIndexNameMap) {
+        if (err == null || out == null || stringValidator == null || wordsExtractor == null || invertedIndexPerIndexNameMap == null) {
+            throw new IllegalArgumentException("Dependencies cannot be null.");
+        }
         this.err = err;
         this.out = out;
         this.stringValidator = stringValidator;

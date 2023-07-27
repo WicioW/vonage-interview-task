@@ -20,6 +20,49 @@ import static org.mockito.Mockito.*;
 class SearchHandlerImplTest {
 
     @Nested
+    public class ConstructorTest{
+        @Test
+        public void testConstructorWithNullErr() {
+            //given
+            StringValidator stringValidator = mock(StringValidator.class);
+            WordsExtractor wordsExtractor = mock(WordsExtractor.class);
+            Map<String, InvertedIndexPerIndexName> invertedIndexPerIndexNameMap = mock(Map.class);
+            //when-then
+            assertThrows(IllegalArgumentException.class, () -> new SearchHandlerImpl(null, stringValidator, wordsExtractor, invertedIndexPerIndexNameMap));
+        }
+
+        @Test
+        public void testConstructorWithNullStringValidator() {
+            //given
+            PrintStream err = mock(PrintStream.class);
+            WordsExtractor wordsExtractor = mock(WordsExtractor.class);
+            Map<String, InvertedIndexPerIndexName> invertedIndexPerIndexNameMap = mock(Map.class);
+            //when-then
+            assertThrows(IllegalArgumentException.class, () -> new SearchHandlerImpl(err, null, wordsExtractor, invertedIndexPerIndexNameMap));
+        }
+
+        @Test
+        public void testConstructorWithNullWordsExtractor() {
+            //given
+            PrintStream err = mock(PrintStream.class);
+            StringValidator stringValidator = mock(StringValidator.class);
+            Map<String, InvertedIndexPerIndexName> invertedIndexPerIndexNameMap = mock(Map.class);
+            //when-then
+            assertThrows(IllegalArgumentException.class, () -> new SearchHandlerImpl(err, stringValidator, null, invertedIndexPerIndexNameMap));
+        }
+
+        @Test
+        public void testConstructorWithNullInvertedIndexPerIndexNameMap() {
+            //given
+            PrintStream err = mock(PrintStream.class);
+            StringValidator stringValidator = mock(StringValidator.class);
+            WordsExtractor wordsExtractor = mock(WordsExtractor.class);
+            //when-then
+            assertThrows(IllegalArgumentException.class, () -> new SearchHandlerImpl(err, stringValidator, wordsExtractor, null));
+        }
+    }
+
+    @Nested
     public class SearchTest {
         private final PrintStream err = mock(PrintStream.class);
         private final StringValidator stringValidator = mock(StringValidator.class);
@@ -148,7 +191,6 @@ class SearchHandlerImplTest {
         }
 
     }
-
 
     @Nested
     public class HelpfulTextTest {

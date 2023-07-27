@@ -21,7 +21,11 @@ public class SearchHandlerImpl implements CommandHandlers.SearchHandler {
     public SearchHandlerImpl(
             PrintStream err,
             StringValidator stringValidator,
-            WordsExtractor wordsExtractor, Map<String, InvertedIndexPerIndexName> invertedIndexPerIndexNameMap) {
+            WordsExtractor wordsExtractor,
+            Map<String, InvertedIndexPerIndexName> invertedIndexPerIndexNameMap) {
+        if (err == null || stringValidator == null || wordsExtractor == null || invertedIndexPerIndexNameMap == null) {
+            throw new IllegalArgumentException("Dependencies cannot be null.");
+        }
         this.err = err;
         this.stringValidator = stringValidator;
         this.wordsExtractor = wordsExtractor;
