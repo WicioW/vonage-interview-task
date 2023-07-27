@@ -17,7 +17,6 @@ public class ScoreHelper {
         if(incrementedWordOccurrenceCount > allWordsCount){
             throw new IllegalStateException("Cannot call increment method. wordOccurrenceCount must be less than or equal to allWordsCount");
         }
-
         wordOccurrenceCount = incrementedWordOccurrenceCount;
     }
 

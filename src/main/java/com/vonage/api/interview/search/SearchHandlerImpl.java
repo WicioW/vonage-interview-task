@@ -9,7 +9,6 @@ import java.io.PrintStream;
 import java.nio.file.Path;
 import java.util.*;
 
-
 public class SearchHandlerImpl implements CommandHandlers.SearchHandler {
 
     private final PrintStream err;
@@ -42,32 +41,46 @@ public class SearchHandlerImpl implements CommandHandlers.SearchHandler {
 
         String[] searchWords = wordsExtractor.extract(searchString);
 
-        //create empty score map, every file should have score 0
-        Set<Path> allFiles = invertedIndexPerIndexName.getAllFiles();
-        Map<Path, ScoreHelper> scoreHelperMap = new HashMap<>(allFiles.size());
-        for (Path file : allFiles) {
-            scoreHelperMap.put(file, new ScoreHelper(searchWords.length));
-        }
+        Map<Path, ScoreHelper> scoreHelperMap = createScoreHelperMapForEveryFile(
+                invertedIndexPerIndexName.getAllFiles(),
+                searchWords.length);
 
-        Map<String, Set<Path>> invertedIndex = invertedIndexPerIndexName.getInvertedIndex();
+        updateScoreHelperMapForEveryFoundWord(
+                searchWords,
+                scoreHelperMap,
+                invertedIndexPerIndexName.getInvertedIndex()
+        );
 
-        for (String searchWord : searchWords) {
-            Set<Path> filesWithWord = invertedIndex.getOrDefault(searchWord, new HashSet<>());
-            for (Path file : filesWithWord) {
-                ScoreHelper scoreHelper = scoreHelperMap.get(file);
-                scoreHelper.incrementWordOccurrenceCount();
-            }
-        }
-
-        //create and fill FileScore
-        TreeMap<String, Integer> orderedFileScores = new TreeMap<>(Collections.reverseOrder());
-        for (Map.Entry<Path, ScoreHelper> entry : scoreHelperMap.entrySet()) {
-            orderedFileScores.put(
-                    entry.getKey().toString(),
-                    entry.getValue().getScore()
-            );
-        }
-
+        TreeMap<String, Integer> orderedFileScores = mapScoreHelperMapToOrderedScoreMap(scoreHelperMap);
         return new FileScores(orderedFileScores);
+    }
+
+    private Map<Path, ScoreHelper> createScoreHelperMapForEveryFile(Set<Path> allFiles, int searchWordsCount) {
+        Map<Path, ScoreHelper> scoreHelperMap = new HashMap<>(allFiles.size());
+
+        allFiles.forEach(file ->
+                        scoreHelperMap.put(file, new ScoreHelper(searchWordsCount)));
+        return scoreHelperMap;
+    }
+
+    private void updateScoreHelperMapForEveryFoundWord(String[] searchWords, Map<Path, ScoreHelper> scoreHelperMap, Map<String, Set<Path>> invertedIndex) {
+        Arrays.asList(searchWords)
+                .forEach(searchWord ->
+                        updateEachFileInScoreHelperMapByWord(
+                                scoreHelperMap,
+                                invertedIndex.getOrDefault(searchWord, new HashSet<>())));
+    }
+
+    private void updateEachFileInScoreHelperMapByWord(Map<Path, ScoreHelper> scoreHelperMap, Set<Path> filesWithWord) {
+        filesWithWord.forEach(file -> scoreHelperMap.get(file).incrementWordOccurrenceCount());
+    }
+
+    private TreeMap<String, Integer> mapScoreHelperMapToOrderedScoreMap(Map<Path, ScoreHelper> scoreHelperMap) {
+        TreeMap<String, Integer> orderedFileScores = new TreeMap<>(Collections.reverseOrder());
+        scoreHelperMap.forEach((key, value) ->
+                orderedFileScores.put(
+                        key.toString(),
+                        value.getScore()));
+        return orderedFileScores;
     }
 }

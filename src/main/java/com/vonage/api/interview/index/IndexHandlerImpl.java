@@ -11,6 +11,7 @@ import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -43,10 +44,14 @@ public class IndexHandlerImpl implements CommandHandlers.IndexHandler {
         Path path = Paths.get(directory);
         if (!isPathADirectory(path)) return;
 
-        invertedIndexPerIndexNameMap.put(indexName, new InvertedIndexPerIndexName());
+        createOrUpdateInvertedIndexNameMapWithNewValue(indexName);
         preprocessFiles(path, indexName);
 
         out.println("Indexed " + path + " with name " + indexName);
+    }
+
+    private void createOrUpdateInvertedIndexNameMapWithNewValue(String indexName) {
+        invertedIndexPerIndexNameMap.put(indexName, new InvertedIndexPerIndexName());
     }
 
     private void preprocessFiles(Path directory, String indexName) {
@@ -63,14 +68,20 @@ public class IndexHandlerImpl implements CommandHandlers.IndexHandler {
         try (BufferedReader br = new BufferedReader(new FileReader(file.toFile()))) {
             String line;
             while ((line = br.readLine()) != null) {
-                String[] words = wordsExtractor.extract(line);
-                for (String word : words) {
-                    invertedIndexPerIndexName.addWord(word, file);
-                }
+                fillInvertedIndexPerIndexNameMapWithExtractedWords(file, invertedIndexPerIndexName, line);
             }
         } catch (Exception e) {
             err.println("Error preprocessing file: " + e.getMessage());
         }
+    }
+
+    private void fillInvertedIndexPerIndexNameMapWithExtractedWords(
+            Path file,
+            InvertedIndexPerIndexName invertedIndexPerIndexName,
+            String line) {
+        String[] words = wordsExtractor.extract(line);
+
+        Arrays.asList(words).forEach(word -> invertedIndexPerIndexName.addWord(word, file));
     }
 
     private boolean isPathADirectory(Path path) {
