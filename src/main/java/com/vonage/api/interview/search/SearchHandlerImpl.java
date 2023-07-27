@@ -30,7 +30,8 @@ public class SearchHandlerImpl implements CommandHandlers.SearchHandler {
 
     @Override
     public FileScores search(String indexName, String searchString) {
-        if (stringValidator.isEmpty(indexName, "IndexName") || stringValidator.isEmpty(searchString, "SearchString")) {
+        if (stringValidator.isEmpty(indexName) || stringValidator.isEmpty(searchString)) {
+            err.println("Error: indexName parameter or searchString parameter is empty.");
             return emptyFileScores;
         }
 

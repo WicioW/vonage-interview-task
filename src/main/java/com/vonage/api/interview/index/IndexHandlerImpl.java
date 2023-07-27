@@ -37,7 +37,8 @@ public class IndexHandlerImpl implements CommandHandlers.IndexHandler {
 
     @Override
     public void index(String indexName, String directory) {
-        if (stringValidator.isEmpty(indexName, "IndexName") || stringValidator.isEmpty(directory, "Directory")) {
+        if (stringValidator.isEmpty(indexName) || stringValidator.isEmpty(directory)) {
+            err.println("Error: indexName parameter or directory parameter is empty.");
             return;
         }
 

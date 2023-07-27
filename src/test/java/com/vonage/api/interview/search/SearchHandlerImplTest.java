@@ -15,8 +15,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class SearchHandlerImplTest {
 
@@ -29,7 +28,7 @@ class SearchHandlerImplTest {
 
         private final SearchHandlerImpl testObj = new SearchHandlerImpl(
                 err,
-                new StringValidator(err),
+                new StringValidator(),
                 wordsExtractor,
                 invertedIndexPerIndexNameMap);
 
@@ -38,11 +37,12 @@ class SearchHandlerImplTest {
             //given
             String indexName = "";
             String searchString = "1ngUXVa";
-            when(stringValidator.isEmpty(indexName, "IndexName")).thenReturn(true);
+            when(stringValidator.isEmpty(indexName)).thenReturn(true);
             //when
             FileScores result = testObj.search(indexName, searchString);
             //then
             assertTrue(result.getFileScores().isEmpty());
+            verify(err).println("Error: indexName parameter or searchString parameter is empty.");
         }
 
         @Test
@@ -50,11 +50,12 @@ class SearchHandlerImplTest {
             //given
             String indexName = "Qy1zx";
             String searchString = "";
-            when(stringValidator.isEmpty(searchString, "SearchString")).thenReturn(true);
+            when(stringValidator.isEmpty(searchString)).thenReturn(true);
             //when
             FileScores result = testObj.search(indexName, searchString);
             //then
             assertTrue(result.getFileScores().isEmpty());
+            verify(err).println("Error: indexName parameter or searchString parameter is empty.");
         }
 
         @Test
@@ -159,7 +160,7 @@ class SearchHandlerImplTest {
 
         private final SearchHandlerImpl testObj = new SearchHandlerImpl(
                 err,
-                new StringValidator(err),
+                new StringValidator(),
                 wordsExtractor,
                 invertedIndexPerIndexNameMap);
 

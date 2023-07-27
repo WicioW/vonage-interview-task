@@ -1,42 +1,24 @@
 package com.vonage.api.interview.util;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class StringValidatorTest {
 
-    private final ByteArrayOutputStream errBuffer = new ByteArrayOutputStream();
-    private final PrintStream err = new PrintStream(errBuffer, true);
-
-    private final StringValidator testObj = new StringValidator(err);
-
-    private static final String ERROR_MESSAGE = "Error: %s cannot be empty." + System.lineSeparator();
-
-    @AfterEach
-    public void close() {
-        err.close();
-    }
+    private final StringValidator testObj = new StringValidator();
 
     @Test
-    void testValidateIsNotEmpty() {
+    void isEmpty_shouldReturnTrue_whenStringIsEmptyOrNull() {
         //when-then
-        assertFalse(testObj.isEmpty("test", "test"));
-        assertTrue(testObj.isEmpty("", "test"));
-        assertTrue(testObj.isEmpty(null, "test"));
+        assertTrue(testObj.isEmpty(""));
+        assertTrue(testObj.isEmpty(null));
     }
 
     @Test
-    void testValidateIsNotEmptyErrorMessage() {
-        //given-when
-        testObj.isEmpty("", "b195yqR");
-        //then
-        assertEquals(ERROR_MESSAGE.formatted("b195yqR"), errBuffer.toString());
+    void isEmpty_shouldReturnFalse_whenStringHasContent(){
+        //when-then
+        assertFalse(testObj.isEmpty("test"));
     }
-
 
 }

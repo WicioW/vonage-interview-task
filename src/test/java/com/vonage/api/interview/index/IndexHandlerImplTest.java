@@ -38,15 +38,37 @@ class IndexHandlerImplTest {
                 wordsExtractor,
                 invertedIndexPerIndexNameMap);
 
-        @BeforeEach
-        public void setup() {
-            when(stringValidator.isEmpty(anyString(), anyString())).thenReturn(false);
+        @Test
+        void whenIndexNameIsEmpty_shouldNotIndexAnythingToMap() {
+            //given
+            String indexName = "";
+            when(stringValidator.isEmpty(anyString())).thenReturn(true);
+            //when
+            testObj.index(indexName, "directory");
+            //then
+            verify(invertedIndexPerIndexNameMap, never()).put(anyString(), any());
+            assertNull(invertedIndexPerIndexNameMap.get(indexName));
+            verify(err).println("Error: indexName parameter or directory parameter is empty.");
+        }
+
+        @Test
+        void whenDirectoryParameterIsEmpty_shouldNotIndexAnythingToMap() {
+            //given
+            String directory = "";
+            when(stringValidator.isEmpty(anyString())).thenReturn(true);
+            //when
+            testObj.index("indexName", directory);
+            //then
+            verify(invertedIndexPerIndexNameMap, never()).put(anyString(), any());
+            assertNull(invertedIndexPerIndexNameMap.get("indexName"));
+            verify(err).println("Error: indexName parameter or directory parameter is empty.");
         }
 
         @Test
         void whenDirectoryParameterIsNotValid_shouldNotIndexAnythingToMap() {
             //given
             String directory = "certainly_not/directory";
+            when(stringValidator.isEmpty(anyString())).thenReturn(false);
             //when
             testObj.index("indexName", directory);
             //then
@@ -64,7 +86,7 @@ class IndexHandlerImplTest {
             when(wordsExtractor.extract("hello moop")).thenReturn(new String[]{"hello", "moop"});
             InvertedIndexPerIndexName invertedIndexPerIndexName = new InvertedIndexPerIndexName();
             when(invertedIndexPerIndexNameMap.get(indexName)).thenReturn(invertedIndexPerIndexName);
-
+            when(stringValidator.isEmpty(anyString())).thenReturn(false);
             //when
             testObj.index(indexName, tmpDir.getAbsolutePath());
 
@@ -93,7 +115,7 @@ class IndexHandlerImplTest {
         private final IndexHandlerImpl testObj = new IndexHandlerImpl(
                 err,
                 out,
-                new StringValidator(err),
+                new StringValidator(),
                 wordsExtractor,
                 invertedIndexPerIndexNameMap);
 

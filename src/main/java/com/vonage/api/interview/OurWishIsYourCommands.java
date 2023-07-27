@@ -15,12 +15,12 @@ public class OurWishIsYourCommands {
         // TODO: Instantiate your dependencies here, DO NOT use any kind of dependency injection frameworks
         final Map<String, InvertedIndexPerIndexName> invertedIndexPerIndexNameMap = new HashMap<>();
         WordsExtractor wordsExtractor = new WordsExtractor();
-        StringValidator stringValidator = new StringValidator(System.err);
+        StringValidator stringValidator = new StringValidator();
         return new CommandHandlers(
                 new IndexHandlerImpl(
                         System.err,
                         System.out,
-                        new StringValidator(System.err),
+                        stringValidator,
                         wordsExtractor,
                         invertedIndexPerIndexNameMap),
                 new SearchHandlerImpl(
