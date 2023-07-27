@@ -13,7 +13,9 @@ public class InvertedIndexPerIndexName {
 
     public void addWord(String word, Path file) {
         allFiles.add(file);
-        invertedIndex.computeIfAbsent(word, k -> new HashSet<>()).add(file);
+        invertedIndex
+                .computeIfAbsent(word, k -> new HashSet<>())
+                .add(file);
     }
 
     public Set<Path> getAllFiles() {

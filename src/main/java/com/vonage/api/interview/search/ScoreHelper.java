@@ -2,28 +2,30 @@ package com.vonage.api.interview.search;
 
 public class ScoreHelper {
 
-    private final int allWordsCount;
+    private static final String ERROR_ALL_WORDS_COUNT_INVALID = "allWordsCount must be greater than zero";
+    private static final String ERROR_CANNOT_CALL_INCREMENT_METHOD = "Cannot call increment method. wordOccurrenceCount must be less than or equal to allWordsCount";
+
+    private final int totalWordsCount;
     private int wordOccurrenceCount = 0;
 
-    public ScoreHelper(int allWordsCount) {
-        if(allWordsCount < 0){
-            throw new IllegalArgumentException("allWordsCount must be greater than zero");
+    public ScoreHelper(int totalWordsCount) {
+        if (totalWordsCount < 0) {
+            throw new IllegalArgumentException(ERROR_ALL_WORDS_COUNT_INVALID);
         }
-        this.allWordsCount = allWordsCount;
+        this.totalWordsCount = totalWordsCount;
     }
 
     public void incrementWordOccurrenceCount() {
-        int incrementedWordOccurrenceCount = wordOccurrenceCount + 1;
-        if(incrementedWordOccurrenceCount > allWordsCount){
-            throw new IllegalStateException("Cannot call increment method. wordOccurrenceCount must be less than or equal to allWordsCount");
+        if (wordOccurrenceCount >= totalWordsCount) {
+            throw new IllegalStateException(ERROR_CANNOT_CALL_INCREMENT_METHOD);
         }
-        wordOccurrenceCount = incrementedWordOccurrenceCount;
+        wordOccurrenceCount++;
     }
 
     public int getScore() {
-        if(allWordsCount == 0){
+        if (totalWordsCount == 0) {
             return 0;
         }
-        return (int) (((double) wordOccurrenceCount / allWordsCount) * 100);
+        return (int) (((double) wordOccurrenceCount / totalWordsCount) * 100);
     }
 }
