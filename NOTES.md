@@ -23,6 +23,55 @@ We can consider using more sophisticated search mechanisms to improve search acc
 The implementation might not handle special characters or complex linguistic patterns that could affect search results.
 Consider additional processing or language-specific handling to improve search accuracy.
 
+## Matching words and WordsExtractor.class
+Currently, the implementation is removing char `'` from the words and replacing `-` with whitespace.
+It works for easy cases like `haven't` and `in-between`, but it might not work for more complex cases.
+
+In the future some better algorithm could be used to match words.
+### Regarding apostrophes
+For example:
+```
+haven't
+wouldn't
+couldn't
+shouldn't
+```
+can be mapped to
+```
+have not
+would not
+could not
+should not
+```
+BUT we do not know how this words should be mapped:
+```
+it's
+we're
+```
+can be
+```
+it is/it has
+we are/we were
+```
+### Regarding hyphens
+```
+in-between
+```
+can be mapped to
+```
+in between
+```
+BUT we do not know how this words should be mapped:
+```
+non-stop
+```
+can be
+```
+nonstop/non stop
+```
+
+and word `non` could be indexed and matched with other words, like `non existent` (first part)
+
 # Limitations:
 ## Case-Insensitive Searching and Stemming:
 The implementation does not support case-insensitive searching or stemming, limiting search flexibility and accuracy.
