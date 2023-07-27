@@ -5,15 +5,21 @@ Your `SearchHandler` needs to implement the `FileScores search(String indexName,
 providing an instance of `FileScores` that contains an **_in-order_** map of the files that contain the search string and a score; the highest score should be at the top of the ordered Map.
 ```
 If I understand it correctly, we need to return `FileScores` object with ordered map, sorted by score.
-But in `FileScores` class we have `Map<String, Integer> fileScores` and `Map<String, Integer> fileScores` cannot be ordered by value which is score.
+
+But in `FileScores` class we have `Map<String, Integer> fileScores` and it cannot be ordered by value which is score.
 I also cannot change anything in `FileScores` class. 
 
-I was not sure if I should implement `NavigableMap` interface on my own and override `forEach` method that returns map sorted by value
-or maybe this is a mistake and I just should use TreeMap. I assume I should override `forEach` method because it is used in line 78 in Application.class.
-I decided to use TreeMap, but I am not sure if this is correct solution. In my solution I am sorting TreeMap in descending order to show that I know how to do it.
-I am not sure if this is correct solution, but I decided to do it this way.
+To resolve this issue, I considered different approaches. 
+Initially, I contemplated implementing the `NavigableMap` interface to override the `forEach` method and obtain a map sorted by value.
+(I assume I should override `forEach` method because it is used in line 78 in Application.class.)
+Alternatively, I explored the possibility of using a `TreeMap`, pretending that the map in `FileScores` had its `key` and `value` switched to `Map<Integer, String>`.
 
-Right now if we use `search` command the output will not be sorted by score, but by filename. (line 78 in Application.class)
+I decided to proceed by using a TreeMap to sort the map in descending order and showcase my understanding of this process.
+Although uncertain if this is the optimal solution, I chose to adopt this approach for the time being.
+
+As a result, when utilizing the search command, the current output displays files in alphabetical order rather than sorted by score.
+
+I would appreciate any insights or suggestions to enhance the implementation and achieve the desired ordering by score in the FileScores output.
 
 # !!! Considerations, Limitations, and Noteworthy Omissions are below. !!!
 
