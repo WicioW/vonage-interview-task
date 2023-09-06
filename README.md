@@ -1,3 +1,16 @@
+# Home assignment from Vonage.
+
+Notes from me:
+
+Raw code structure, received from Vonage, is on branch `received-task`.
+On this branch(`master`) is mine solution for this task.
+
+Time given to me was `<4 days`.
+Received at the end of the monday. I was told that task has to be done and sent until the end of workday on friday.
+I sent it on Thursday.
+
+Below is task description.
+
 # Vonage API Interview Excercise
 
 Hey :D
